@@ -6,9 +6,6 @@ import org.junit.Test;
 
 public class AppTest {
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
+	private App app;
 
 }
