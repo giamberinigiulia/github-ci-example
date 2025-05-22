@@ -10,8 +10,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java: [17, 21]
-        os: [ubuntu-latest]
+         os: [ubuntu-latest]
+         include:
+         - java: 17
+           additional-maven-args: '-Pjacoco'
+         - java: 21
+        
 
     name: Build with Java ${{ matrix.java }} on ${{ matrix.os }}
     steps:
@@ -31,7 +35,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2-
 
       - name: Build with Maven
-        run: mvn -f myproject/pom.xml clean verify -Pjacoco
+        run: mvn -f myproject/pom.xml clean verify ${{matrix.additional-maven-args}}}
 
       - name: Generate JUnit Report
         run: mvn -f myproject/pom.xml surefire-report:report-only
