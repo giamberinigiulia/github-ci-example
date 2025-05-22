@@ -7,21 +7,16 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-       java: [17, 21]
-       os: [ubuntu-latest]
-       include:
-         - java: 17
-           os: ubuntu-latest
-           additional-maven-args: '-Pjacoco coveralls:report'
-         - java: 21
-           os: ubuntu-latest
-           additional-maven-args: ''
+        include:
+          - java: 17
+            additional-maven-args: "-Pjacoco coveralls:report"
+          - java: 21
         
 
-    name: Build with Java ${{ matrix.java }} on ${{ matrix.os }}
+    name: Build with Java ${{ matrix.java }} on Linux
     steps:
       - uses: actions/checkout@v2
 
@@ -35,18 +30,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
+          key: ${{ runner.os }}-m2-jdk${{matrix.java}}-${{ hashFiles('**/pom.xml', '**/*.yml') }}
           restore-keys: ${{ runner.os }}-m2-
 
       - name: Build with Maven
         run: mvn -f myproject/pom.xml clean verify ${{matrix.additional-maven-args}}
         env:
-           COVERALLS_REPO_TOKEN: $${{secrets.COVERALLS_TOKEN}}
-      - name: Upload JaCoCo HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: '**/target/site/jacoco'
+           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+#      - name: Upload JaCoCo HTML report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: jacoco-report
+#          path: '**/target/site/jacoco'
 
       - name: Generate JUnit Report
         run: mvn -f myproject/pom.xml surefire-report:report-only
