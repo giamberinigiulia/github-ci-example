@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - packages-ecosystem: "maven"
+    directory: "/myproject"
+    schedule:
+      interval: "daily"
+  - packages-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
