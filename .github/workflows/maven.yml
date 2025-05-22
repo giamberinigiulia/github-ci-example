@@ -41,7 +41,7 @@ jobs:
         if: $${{always()}}
         with:
           name: jacoco-report-jdk-${{ matrix.java }}-os-${{ matrix.os }}
-          path: '**/target/site'
+          path: '**/target/site/jacoco'
 
       - name: Generate JUnit Report
         run: mvn -f myproject/pom.xml surefire-report:report-only
