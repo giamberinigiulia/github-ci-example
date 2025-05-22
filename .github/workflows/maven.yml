@@ -39,6 +39,7 @@ jobs:
 
       - name: Archive JUnit Report
         uses: actions/upload-artifact@v4
+        if: $${{always()}}
         with:
           name: surefire-report-jdk-${{ matrix.java }}-os-${{ matrix.os }}
           path: '**/target/reports'
