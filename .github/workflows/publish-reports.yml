@@ -1,0 +1,38 @@
+name: Publish Reports to GitHub Pages
+
+on:
+  push:
+    tags:
+      - 'v*'   # Trigger on version tags like v1.0.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish HTML Reports
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Build reports (JUnit + PIT)
+        run: |
+          mvn clean verify org.pitest:pitest-maven:mutationCoverage surefire-report:report-only
+
+      - name: Copy Reports to docs folder
+        run: |
+          mkdir -p docs/reports
+          cp -r target/site/jacoco docs/reports/jacoco
+          cp -r target/site/pit-reports docs/reports/pit
+          cp -r target/site/surefire-report docs/reports/junit
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
