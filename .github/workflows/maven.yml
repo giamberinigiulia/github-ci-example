@@ -15,7 +15,7 @@ jobs:
        include:
          - java: 17
            os: ubuntu-latest
-           additional-maven-args: '-Pjacoco'
+           additional-maven-args: '-Pjacoco coveralls:report'
          - java: 21
            os: ubuntu-latest
            additional-maven-args: ''
@@ -43,7 +43,6 @@ jobs:
         env:
            COVERALLS_REPO_TOKEN: $${{secrets.COVERALLS_TOKEN}}
       - name: Upload JaCoCo HTML report
-        if: matrix.additional-maven-args == '-Pjacoco'
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
