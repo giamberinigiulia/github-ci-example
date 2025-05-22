@@ -18,6 +18,9 @@ jobs:
           java: 21
         - os: windows-latest
           java: 21
+        include:
+        - os: ubuntu-latest
+          java: 8
 
     name: Build with Java ${{ matrix.java }} on ${{ matrix.os }}
     steps:
