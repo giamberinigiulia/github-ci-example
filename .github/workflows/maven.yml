@@ -36,6 +36,12 @@ jobs:
 
       - name: Build with Maven
         run: mvn -f myproject/pom.xml clean verify ${{matrix.additional-maven-args}}}
+      - name: Archive CodeCoverage Report
+        uses: actions/upload-artifact@v4
+        if: $${{always()}}
+        with:
+          name: jacoco-report-jdk-${{ matrix.java }}-os-${{ matrix.os }}
+          path: '**/target/site'
 
       - name: Generate JUnit Report
         run: mvn -f myproject/pom.xml surefire-report:report-only
