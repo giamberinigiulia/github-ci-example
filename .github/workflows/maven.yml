@@ -10,12 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
        workdir: myproject
+       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
     strategy:
       matrix:
-        include:
-          - java: 17
-            additional-maven-args: "-Pcoveralls"
-          - java: 21
+        java: [17,21]
         
 
     name: Build with Java ${{ matrix.java }} on Linux
@@ -35,11 +33,14 @@ jobs:
           key: ${{ runner.os }}-m2-jdk${{matrix.java}}-${{ hashFiles('**/pom.xml', '**/*.yml') }}
           restore-keys: ${{ runner.os }}-m2-
 
+
+      - name: Set Maven Additional Options
+        run: echo "ADDITIONAL_MAVEN_OPTIONS=-Pcoveralls" >> $GITHUB_ENV
+        if: ${{env.COVERALLS_REPO_TOKEN && matrix.java == 17}}
       - name: Build with Maven
-        run: mvn verify ${{matrix.additional-maven-args}}
+        run: mvn verify $ADDITIONAL_MAVEN_OPTIONS
         working-directory: ${{env.workdir}}
-        env:
-           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+           
 #      - name: Upload JaCoCo HTML report
 #        uses: actions/upload-artifact@v4
 #        with:
