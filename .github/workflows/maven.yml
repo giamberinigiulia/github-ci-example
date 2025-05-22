@@ -41,6 +41,7 @@ jobs:
       - name: Build with Maven
         run: mvn -f myproject/pom.xml clean verify ${{matrix.additional-maven-args}}
       - name: Upload JaCoCo HTML report
+        if: matrix.additional-maven-args == '-Pjacoco'
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
