@@ -10,12 +10,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-         os: [ubuntu-latest]
-         include:
+       java: [17, 21]
+       os: [ubuntu-latest]
+       include:
          - java: 17
+           os: ubuntu-latest
            additional-maven-args: '-Pjacoco'
          - java: 21
-           additional-maven-args: ""
+           os: ubuntu-latest
+           additional-maven-args: ''
         
 
     name: Build with Java ${{ matrix.java }} on ${{ matrix.os }}
